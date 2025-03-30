@@ -6,7 +6,7 @@ export default function Home() {
 
   let signupUrl: string;
 
-  if (subdomain === "localhost") {
+  if (subdomain === import.meta.env.VITE_DOMAIN) {
     signupUrl = "register-company";
   } else {
     signupUrl = "signup";
