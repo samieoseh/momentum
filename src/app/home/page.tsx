@@ -6,6 +6,7 @@ export default function Home() {
 
   let signupUrl: string;
 
+  console.log({ subdomain, viteDomain: import.meta.env.VITE_DOMAIN });
   if (subdomain === import.meta.env.VITE_DOMAIN) {
     signupUrl = "register-company";
   } else {
