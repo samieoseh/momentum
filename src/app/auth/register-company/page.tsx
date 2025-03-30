@@ -70,7 +70,11 @@ export default function RegisterCompany() {
             const subdomain = companyData.company.subdomain
               .toLowerCase()
               .replace(/\s+/g, "-");
-            window.location.href = `http://${subdomain}.localhost:5173`;
+            const href =
+              import.meta.env.VITE_NODE_ENV === "development"
+                ? `http://${subdomain}.localhost:5173`
+                : `http://${subdomain}.izone5.info`;
+            window.location.href = href;
           },
         });
       },
