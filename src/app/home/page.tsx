@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 
 export default function Home() {
   const hostname = window.location.hostname;
-  const subdomain = hostname.split(".")[0];
+  const splitCount = import.meta.env.VITE_NODE_ENV === "development" ? 0 : 1;
+  const subdomain = hostname.split(".")[splitCount];
 
   let signupUrl: string;
 
