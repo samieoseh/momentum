@@ -2,13 +2,12 @@ import { Link } from "react-router-dom";
 
 export default function Home() {
   const hostname = window.location.hostname;
-  const splitCount = import.meta.env.VITE_NODE_ENV === "development" ? 0 : 1;
-  const subdomain = hostname.split(".")[splitCount];
+  const subdomain = hostname.split(".")[1];
 
   let signupUrl: string;
 
   console.log({ subdomain, viteDomain: import.meta.env.VITE_DOMAIN });
-  if (subdomain === import.meta.env.VITE_DOMAIN) {
+  if (subdomain !== import.meta.env.VITE_DOMAIN) {
     signupUrl = "register-company";
   } else {
     signupUrl = "signup";
