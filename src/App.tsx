@@ -59,6 +59,7 @@ function App() {
       return;
     }
 
+    console.log(import.meta.env.VITE_DOMAIN, hostname);
     if (hostname === import.meta.env.VITE_DOMAIN) {
       // skip domain check for root domain
       setIsAuthorized(true);
