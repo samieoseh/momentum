@@ -59,7 +59,7 @@ function App() {
       return;
     }
 
-    if (hostname === "localhost") {
+    if (hostname === import.meta.env.VITE_DOMAIN) {
       // skip domain check for root domain
       setIsAuthorized(true);
       setIsChecking(false);
