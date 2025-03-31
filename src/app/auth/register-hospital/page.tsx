@@ -14,15 +14,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import useAuthMutations from "@/mutations/auth-mutations";
-import { CompanyRegistrationData } from "@/typings/company-registration";
+import { HospitalRegistrationData } from "@/typings/hospital-registration";
 import { UserRegistrationData } from "@/typings/user-registration";
 import axios from "@/api/axios";
 
 const FormSchema = z.object({
-  companyName: z.string().min(2, {
-    message: "Company Name must be at least 2 characters.",
+  name: z.string().min(2, {
+    message: "Hospital Name must be at least 2 characters.",
   }),
-  companyEmail: z.string().email({ message: "Invalid email address." }),
+  hospitalEmail: z.string().email({ message: "Invalid email address." }),
   firstName: z.string().min(1, { message: "First Name is required." }),
   lastName: z.string().min(1, { message: "Last Name is required." }),
   email: z.string().email({ message: "Invalid email address." }),
@@ -31,13 +31,14 @@ const FormSchema = z.object({
     .min(6, { message: "Password must be at least 6 characters." }),
 });
 
-export default function RegisterCompany() {
-  const { registerCompanyMutation, registerAdminMutation } = useAuthMutations();
+export default function RegisterHospital() {
+  const { registerHospitalMutation, registerAdminMutation } =
+    useAuthMutations();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      companyName: "",
-      companyEmail: "",
+      name: "",
+      hospitalEmail: "",
       firstName: "",
       lastName: "",
       email: "",
@@ -47,15 +48,15 @@ export default function RegisterCompany() {
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     // send a request to create a company and tenant data
-    const companyData: CompanyRegistrationData = {
-      companyName: data.companyName,
-      email: data.companyEmail,
+    const hospitalData: HospitalRegistrationData = {
+      name: data.name,
+      email: data.hospitalEmail,
     };
-    registerCompanyMutation.mutate(companyData, {
-      onSuccess: (companyData) => {
+    registerHospitalMutation.mutate(hospitalData, {
+      onSuccess: (hospitalData) => {
         // with the tenant id, register the admin
         axios.defaults.headers.common["x-tenant-id"] =
-          companyData.company.tenantId;
+          hospitalData.hospital.tenantId;
 
         const adminData: UserRegistrationData = {
           firstName: data.firstName,
@@ -66,8 +67,7 @@ export default function RegisterCompany() {
 
         registerAdminMutation.mutate(adminData, {
           onSuccess: () => {
-            console.log({ companyData });
-            const subdomain = companyData.company.subdomain
+            const subdomain = hospitalData.hospital.subdomain
               .toLowerCase()
               .replace(/\s+/g, "-");
             const href =
@@ -90,12 +90,12 @@ export default function RegisterCompany() {
         >
           <FormField
             control={form.control}
-            name="companyName"
+            name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Company Name</FormLabel>
+                <FormLabel>Hospital Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Company Name" {...field} autoFocus />
+                  <Input placeholder="Hospital Name" {...field} autoFocus />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -104,12 +104,12 @@ export default function RegisterCompany() {
 
           <FormField
             control={form.control}
-            name="companyEmail"
+            name="hospitalEmail"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Company Email</FormLabel>
+                <FormLabel>Hospital Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="Company Email" {...field} />
+                  <Input placeholder="Hospital Email" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

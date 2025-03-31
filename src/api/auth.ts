@@ -1,12 +1,12 @@
-import { CompanyRegistrationData } from "@/typings/company-registration";
+import { HospitalRegistrationData } from "@/typings/hospital-registration";
 import { UserRegistrationData } from "@/typings/user-registration";
 import axios from "axios";
 import axiosWithTenant from "./axios";
 import { LoginData } from "@/typings/login";
 import { SignupData } from "@/typings/signup";
 
-const registerCompany = async (companyData: CompanyRegistrationData) => {
-  const response = await axios.post("/auth/register-company", companyData);
+const registerHospital = async (hospitalData: HospitalRegistrationData) => {
+  const response = await axios.post("/auth/register-hospital", hospitalData);
   const data = await response.data;
   return data;
 };
@@ -44,4 +44,4 @@ const signupUser = async (signupData: SignupData) => {
   const data = await response.data;
   return data;
 };
-export { registerCompany, registerAdmin, loginUser, signupUser };
+export { registerHospital, registerAdmin, loginUser, signupUser };

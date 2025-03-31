@@ -1,7 +1,7 @@
 import {
   loginUser,
   registerAdmin,
-  registerCompany,
+  registerHospital,
   signupUser,
 } from "@/api/auth";
 import { useMutation } from "@tanstack/react-query";
@@ -9,8 +9,8 @@ import { isAxiosError } from "axios";
 import { toast } from "sonner";
 
 export default function useAuthMutations() {
-  const registerCompanyMutation = useMutation({
-    mutationFn: registerCompany,
+  const registerHospitalMutation = useMutation({
+    mutationFn: registerHospital,
     onError: (error) => {
       console.error(error);
       toast.error("An error occured!!");
@@ -46,7 +46,7 @@ export default function useAuthMutations() {
   });
 
   return {
-    registerCompanyMutation,
+    registerHospitalMutation,
     registerAdminMutation,
     loginMutation,
     signupMutation,

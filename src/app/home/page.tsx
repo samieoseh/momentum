@@ -8,7 +8,7 @@ export default function Home() {
 
   console.log({ subdomain, viteDomain: import.meta.env.VITE_DOMAIN });
   if (subdomain !== import.meta.env.VITE_DOMAIN) {
-    signupUrl = "register-company";
+    signupUrl = "register-hospital";
   } else {
     signupUrl = "signup";
   }

@@ -7,7 +7,7 @@ import axiosWithTenant from "./api/axios";
 import AuthLayout from "./app/auth/layout";
 import Signup from "./app/auth/signup/page";
 import Login from "./app/auth/login/page";
-import RegisterCompany from "./app/auth/register-company/page";
+import RegisterCompany from "./app/auth/register-hospital/page";
 import Dashboard from "./app/dashboard/page";
 
 const router = createBrowserRouter([
@@ -29,7 +29,7 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: "register-company",
+        path: "register-hospital",
         element: <RegisterCompany />,
       },
     ],
@@ -52,7 +52,7 @@ function App() {
 
   useEffect(() => {
     const pathname = window.location.pathname;
-    if (pathname === "/auth/register-company") {
+    if (pathname === "/auth/register-hospital") {
       // Skip subdomain check for auth routes
       setIsAuthorized(true);
       setIsChecking(false);
@@ -75,11 +75,11 @@ function App() {
           setIsAuthorized(true);
           setTenantId(response.data.tenantId);
         } else {
-          window.location.href = "/auth/register-company";
+          window.location.href = "/auth/register-hospital";
         }
       } catch (error) {
         console.error("Subdomain check failed:", error);
-        window.location.href = "/auth/register-company";
+        window.location.href = "/auth/register-hospital";
       } finally {
         setIsChecking(false);
       }
