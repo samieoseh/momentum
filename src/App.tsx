@@ -9,6 +9,8 @@ import Signup from "./app/auth/signup/page";
 import Login from "./app/auth/login/page";
 import RegisterCompany from "./app/auth/register-hospital/page";
 import Dashboard from "./app/dashboard/page";
+import OnboardingUser from "./app/auth/onboarding/[id]/page";
+import DoctorSignup from "./app/auth/onboarding/[id]/doctor/page";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +33,14 @@ const router = createBrowserRouter([
       {
         path: "register-hospital",
         element: <RegisterCompany />,
+      },
+      {
+        path: "onboarding/:id",
+        element: <OnboardingUser />,
+      },
+      {
+        path: "onboarding/:id/doctor",
+        element: <DoctorSignup />,
       },
     ],
   },

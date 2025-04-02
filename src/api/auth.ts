@@ -1,5 +1,8 @@
 import { HospitalRegistrationData } from "@/typings/hospital-registration";
-import { UserRegistrationData } from "@/typings/user-registration";
+import {
+  DoctorRegistrationData,
+  UserRegistrationData,
+} from "@/typings/user-registration";
 import axios from "axios";
 import axiosWithTenant from "./axios";
 import { LoginData } from "@/typings/login";
@@ -44,4 +47,25 @@ const signupUser = async (signupData: SignupData) => {
   const data = await response.data;
   return data;
 };
-export { registerHospital, registerAdmin, loginUser, signupUser };
+
+const registerDoctor = async (doctorSignupData: DoctorRegistrationData) => {
+  const tenantIdResponse = await axios.get(
+    `/auth/get-tenant-id/${doctorSignupData.subdomain}`
+  );
+  const tenantIdData = await tenantIdResponse.data;
+
+  axios.defaults.headers.common["x-tenant-id"] = tenantIdData.tenantId;
+  axiosWithTenant.defaults.headers.common["x-tenant-id"] =
+    tenantIdData.tenantId;
+
+  const response = await axios.post("/auth/register-doctor", doctorSignupData);
+  const data = await response.data;
+  return data;
+};
+export {
+  registerHospital,
+  registerAdmin,
+  loginUser,
+  signupUser,
+  registerDoctor,
+};

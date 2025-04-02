@@ -14,28 +14,44 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import useAuthMutations from "@/mutations/auth-mutations";
-import { SignupData } from "@/typings/signup";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { DoctorRegistrationData } from "@/typings/user-registration";
 
 const FormSchema = z.object({
-  firstName: z.string().min(1, { message: "First Name is required." }),
-  lastName: z.string().min(1, { message: "Last Name is required." }),
-  email: z.string().email({ message: "Invalid email address." }),
-  password: z
+  medicalLicenseNumber: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters." }),
+    .length(11, {
+      message: "Medical License Number must be exactly 11 characters.",
+    })
+    .regex(/^[A-Za-z0-9]+$/, {
+      message: "Medical License Number must be alphanumeric.",
+    }),
+  specialization: z.string().min(5, { message: "Specialization is required." }),
+  yearsOfExperience: z
+    .union([z.string(), z.number()])
+    .transform((value) => (typeof value === "string" ? Number(value) : value))
+    .refine((value) => !isNaN(value) && value >= 1, {
+      message: "Years of experience must be a valid number and at least 1.",
+    }),
 });
 
-export default function Signup() {
+export default function DoctorSignup() {
   const navigate = useNavigate();
-  const { signupMutation } = useAuthMutations();
+  const { id } = useParams();
+  const { doctorSignupMutation } = useAuthMutations();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
+      medicalLicenseNumber: "",
+      specialization: "",
+      yearsOfExperience: 0,
     },
   });
 
@@ -43,25 +59,26 @@ export default function Signup() {
     const hostname = window.location.hostname;
     const subdomain = hostname.split(".")[0];
 
-    const signupData: SignupData = {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      password: data.password,
-      subdomain,
+    const doctorData: DoctorRegistrationData = {
+      medicalLicenseNumber: data.medicalLicenseNumber,
+      specialization: data.specialization,
+      yearsOfExperience: data.yearsOfExperience,
+      userId: id ?? "",
+      subdomain: subdomain,
     };
 
-    signupMutation.mutate(signupData, {
-      onSuccess: (data) => {
-        console.log({ data });
-        navigate("/auth/onboarding/" + data.user._id);
+    doctorSignupMutation.mutate(doctorData, {
+      onSuccess: () => {
+        navigate("/dashboard");
       },
     });
   }
 
   return (
     <div className="mx-auto w-[35%] space-y-4">
-      <h2 className="text-center text-xl">Sign up to Medispace </h2>
+      <h2 className="text-center text-xl">
+        Finish setting up your account on Medispace{" "}
+      </h2>
       <div className="border p-6 rounded-md">
         <Form {...form}>
           <form
@@ -70,12 +87,12 @@ export default function Signup() {
           >
             <FormField
               control={form.control}
-              name="firstName"
+              name="medicalLicenseNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>First Name</FormLabel>
+                  <FormLabel>Medical License Number</FormLabel>
                   <FormControl>
-                    <Input placeholder="First Name" {...field} />
+                    <Input placeholder="Medical License Number" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -84,13 +101,25 @@ export default function Signup() {
 
             <FormField
               control={form.control}
-              name="lastName"
+              name="specialization"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Last Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Last Name" {...field} />
-                  </FormControl>
+                  <FormLabel>Specialization</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a verified email to display" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="surgery">Surgery</SelectItem>
+                      <SelectItem value="pharmacology">Pharmacology</SelectItem>
+                      <SelectItem value="radiology">Radiology</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -98,26 +127,16 @@ export default function Signup() {
 
             <FormField
               control={form.control}
-              name="email"
+              name="yearsOfExperience"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Years of Experience</FormLabel>
                   <FormControl>
-                    <Input placeholder="Email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="Password" {...field} />
+                    <Input
+                      placeholder="Years of Experience"
+                      {...field}
+                      type="number"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -127,11 +146,11 @@ export default function Signup() {
             <Button
               type="submit"
               className={`w-full cursor-pointer ${
-                signupMutation.isPending ? "opacity-50" : "opacity-100"
+                doctorSignupMutation.isPending ? "opacity-50" : "opacity-100"
               }`}
               size="lg"
             >
-              {signupMutation.isPending ? "Please wait" : "Next"}
+              {doctorSignupMutation.isPending ? "Please wait" : "Sign up"}
             </Button>
           </form>
         </Form>

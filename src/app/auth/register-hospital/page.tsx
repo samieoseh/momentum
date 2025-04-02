@@ -17,6 +17,7 @@ import useAuthMutations from "@/mutations/auth-mutations";
 import { HospitalRegistrationData } from "@/typings/hospital-registration";
 import { UserRegistrationData } from "@/typings/user-registration";
 import axios from "@/api/axios";
+import { Link } from "react-router-dom";
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -82,101 +83,146 @@ export default function RegisterHospital() {
   }
 
   return (
-    <div className="mx-auto w-[50%] py-16">
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-2/3 space-y-6"
-        >
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Hospital Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Hospital Name" {...field} autoFocus />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <div className="mx-auto w-[35%] space-y-4">
+      <h2 className="text-center text-xl">Sign up to Medispace </h2>
+      <div className="border p-6 rounded-md">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="mx-auto w-full space-y-6"
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Hospital Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Hospital Name"
+                      {...field}
+                      autoFocus
+                      width={100}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="hospitalEmail"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Hospital Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="Hospital Email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="hospitalEmail"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Hospital Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Hospital Email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="firstName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>First Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="First Name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="First Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="lastName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Last Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Last Name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Last Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="Email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input type="password" placeholder="Password" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="Password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <Button type="submit" className="w-full">
-            Submit
-          </Button>
-        </form>
-      </Form>
+            <Button
+              type="submit"
+              className={`w-full cursor-pointer ${
+                registerHospitalMutation.isPending ||
+                registerAdminMutation.isPending
+                  ? "opacity-50"
+                  : "opacity-100"
+              }`}
+              size="lg"
+            >
+              {registerHospitalMutation.isPending ||
+              registerAdminMutation.isPending
+                ? "Please wait"
+                : "Register Hospital"}
+            </Button>
+          </form>
+        </Form>
+      </div>
+      <div className="border flex items-center justify-center p-6 rounded-md">
+        <p>
+          Already have an account?{" "}
+          <Link to="/auth/login" className="text-primary underline">
+            Sign in
+          </Link>
+        </p>
+      </div>
+      <div className="flex space-x-4 justify-center">
+        <Link to="/terms" className="text-xs text-gray-700">
+          Terms
+        </Link>
+        <Link to="/privacy-policy" className="text-xs text-gray-700">
+          Privacy policy
+        </Link>
+        <Link to="/manage-cookies" className="text-xs text-gray-700">
+          Manage cookies
+        </Link>
+        <Link to="/about" className="text-xs text-gray-700">
+          About
+        </Link>
+      </div>
+      <div className="justify-center items-center absolute bottom-0 flex w-[30%]">
+        <p className="text-xs text-gray-600 text-center">Version 1.0.0.1</p>
+      </div>
     </div>
   );
 }
