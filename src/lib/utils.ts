@@ -11,6 +11,8 @@ export function getSignupUrl() {
 
   let signupUrl: string;
 
+  console.log({ subdomain, viteDomain: import.meta.env.VITE_DOMAIN });
+
   if (subdomain !== import.meta.env.VITE_DOMAIN) {
     signupUrl = "/auth/register-hospital";
   } else {
