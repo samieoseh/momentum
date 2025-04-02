@@ -1,6 +1,7 @@
 import {
   loginUser,
   registerAdmin,
+  registerDoctor,
   registerHospital,
   signupUser,
 } from "@/api/auth";
@@ -13,7 +14,11 @@ export default function useAuthMutations() {
     mutationFn: registerHospital,
     onError: (error) => {
       console.error(error);
-      toast.error("An error occured!!");
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      } else {
+        toast.error("An error occured!!");
+      }
     },
   });
 
@@ -21,7 +26,11 @@ export default function useAuthMutations() {
     mutationFn: registerAdmin,
     onError: (error) => {
       console.error(error);
-      toast.error("An error occured!!");
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      } else {
+        toast.error("An error occured!!");
+      }
     },
   });
 
@@ -39,9 +48,31 @@ export default function useAuthMutations() {
 
   const signupMutation = useMutation({
     mutationFn: signupUser,
+    onSuccess: (data) => {
+      toast.success(data.message);
+    },
     onError: (error) => {
       console.error(error);
-      toast.error("An error occured!!");
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      } else {
+        toast.error("An error occured!!");
+      }
+    },
+  });
+
+  const doctorSignupMutation = useMutation({
+    mutationFn: registerDoctor,
+    onSuccess: (data) => {
+      toast.success(data.message);
+    },
+    onError: (error) => {
+      console.error(error);
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      } else {
+        toast.error("An error occured!!");
+      }
     },
   });
 
@@ -50,5 +81,6 @@ export default function useAuthMutations() {
     registerAdminMutation,
     loginMutation,
     signupMutation,
+    doctorSignupMutation,
   };
 }

@@ -13,7 +13,8 @@ import {
 import { Input } from "@/components/ui/input";
 import useAuthMutations from "@/mutations/auth-mutations";
 import { LoginData } from "@/typings/login";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { getSignupUrl } from "@/lib/utils";
 
 const FormSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -23,6 +24,7 @@ const FormSchema = z.object({
 });
 
 export default function Login() {
+  const registerUrl = getSignupUrl();
   const { loginMutation } = useAuthMutations();
   const navigate = useNavigate();
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -57,45 +59,79 @@ export default function Login() {
   }
 
   return (
-    <div className="mx-auto w-[50%] py-16">
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-2/3 space-y-6"
-        >
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="Email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <div className="mx-auto w-[35%] space-y-4">
+      <h2 className="text-center text-xl">Sign in to Medispace </h2>
+      <div className="border p-6 rounded-md">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="w-full space-y-6"
+          >
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input type="password" placeholder="Password" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="Password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <Button type="submit" className="w-full">
-            Submit
-          </Button>
-        </form>
-      </Form>
+            <Button
+              type="submit"
+              className={`w-full cursor-pointer ${
+                loginMutation.isPending ? "opacity-50" : "opacity-100"
+              }`}
+              size="lg"
+            >
+              {loginMutation.isPending ? "Please wait" : "Sign in"}
+            </Button>
+          </form>
+        </Form>
+      </div>
+      <div className="border flex items-center justify-center p-6 rounded-md">
+        <p>
+          Don't have an account?{" "}
+          <Link to={registerUrl} className="text-primary underline">
+            Create account
+          </Link>
+        </p>
+      </div>
+      <div className="flex space-x-4 justify-center">
+        <Link to="/terms" className="text-xs text-gray-700">
+          Terms
+        </Link>
+        <Link to="/privacy-policy" className="text-xs text-gray-700">
+          Privacy policy
+        </Link>
+        <Link to="/manage-cookies" className="text-xs text-gray-700">
+          Manage cookies
+        </Link>
+        <Link to="/about" className="text-xs text-gray-700">
+          About
+        </Link>
+      </div>
+      <div className="justify-center items-center absolute bottom-0 flex w-[30%]">
+        <p className="text-xs text-gray-600 text-center">Version 1.0.0.1</p>
+      </div>
     </div>
   );
 }
